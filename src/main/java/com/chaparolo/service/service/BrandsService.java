@@ -6,17 +6,17 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import com.chaparolo.service.model.Product;
-import com.chaparolo.service.util.ProductsUtils;
+import com.chaparolo.service.util.ProductMapper;
 import com.despegar.integration.mongo.connector.MongoCollection;
 import com.despegar.integration.mongo.query.Query;
 
-public class ProductsService {
+public class BrandsService {
 
-    private static final Logger logger = Logger.getLogger(ProductsService.class);
+    private static final Logger logger = Logger.getLogger(BrandsService.class);
 
     private MongoCollection<Product> products;
 
-    public ProductsService(MongoCollection<Product> products) {
+    public BrandsService(MongoCollection<Product> products) {
 	this.products = products;
     }
 
@@ -32,7 +32,7 @@ public class ProductsService {
 	logger.info("Saving products from XLS");
 
 	this.clearCollection();
-	ProductsUtils.getProductsFromXLS(file).forEach(this::add);
+	ProductMapper.getProductsFromXLS(file).forEach(this::add);
     }
 
 }

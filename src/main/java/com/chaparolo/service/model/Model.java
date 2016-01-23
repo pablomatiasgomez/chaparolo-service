@@ -1,16 +1,17 @@
 package com.chaparolo.service.model;
 
+import java.util.List;
+
 import com.despegar.integration.mongo.entities.IdentifiableEntity;
 
-public class Product implements IdentifiableEntity {
+public class Model implements IdentifiableEntity {
 
     private String id;
     private String name;
-    private String price;
+    private List<Product> products;
 
-    public Product(String name, String price) {
+    public Model(String name) {
 	this.name = name;
-	this.price = price;
     }
 
     @Override
@@ -31,12 +32,12 @@ public class Product implements IdentifiableEntity {
 	this.name = name;
     }
 
-    public String getPrice() {
-	return this.price;
+    public List<Product> getProducts() {
+	return this.products;
     }
 
-    public void setPrice(String price) {
-	this.price = price;
+    public void setProducts(List<Product> products) {
+	this.products = products;
     }
 
 }

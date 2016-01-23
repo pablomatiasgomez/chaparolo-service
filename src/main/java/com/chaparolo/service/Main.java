@@ -4,7 +4,7 @@ import com.chaparolo.service.controller.IndexController;
 import com.chaparolo.service.controller.LoggedFilter;
 import com.chaparolo.service.controller.util.FrontHelper;
 import com.chaparolo.service.model.Product;
-import com.chaparolo.service.service.ProductsService;
+import com.chaparolo.service.service.BrandsService;
 import com.despegar.integration.mongo.connector.MongoCollection;
 import com.despegar.integration.mongo.connector.MongoCollectionFactory;
 import com.despegar.integration.mongo.connector.MongoDBConnection;
@@ -30,7 +30,7 @@ public class Main {
 	MongoCollection<Product> products = factory.buildMongoCollection("products", Product.class);
 
 	// Service
-	ProductsService productsService = new ProductsService(products);
+	BrandsService productsService = new BrandsService(products);
 
 	Spark.port(config.getInt("web-server-port"));
 	Spark.staticFileLocation("/public");
