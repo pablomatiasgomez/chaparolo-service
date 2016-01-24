@@ -4,57 +4,62 @@ import com.despegar.integration.mongo.entities.IdentifiableEntity;
 
 public class Product implements IdentifiableEntity {
 
-	private String id;
-	private String brand;
-	private String model;
-	private String name;
-	private String price;
+    private String id;
+    private String brand;
+    private String model;
+    private String name;
+    private String price;
 
-	public Product(String brand, String model, String name, String price) {
-		this.brand = brand;
-		this.model = model;
-		this.name = name;
-		this.price = price;
-	}
+    public Product() {
+    }
 
-	public String getId() {
-		return id;
-	}
+    public Product(String brand, String model, String name, String price) {
+	this.brand = brand;
+	this.model = model;
+	this.name = name;
+	this.price = price;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    @Override
+    public String getId() {
+	return this.id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    @Override
+    public void setId(String id) {
+	this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+	return this.name;
+    }
 
-	public String getBrand() {
-		return brand;
-	}
+    public void setName(String name) {
+	this.name = name;
+    }
 
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
+    public String getBrand() {
+	return this.brand;
+    }
 
-	public String getModel() {
-		return model;
-	}
+    public void setBrand(String brand) {
+	this.brand = brand;
+    }
 
-	public void setModel(String model) {
-		this.model = model;
-	}
+    public String getModel() {
+	return this.model;
+    }
 
-	public String getPrice() {
-		return price;
-	}
+    public void setModel(String model) {
+	this.model = model;
+    }
 
-	public void setPrice(String price) {
-		this.price = price;
-	}
+    public String getPrice() {
+	return this.price;
+    }
+
+    public void setPrice(String price) {
+	this.price = price;
+    }
 
 }

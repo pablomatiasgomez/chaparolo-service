@@ -2,12 +2,15 @@ package com.chaparolo.service;
 
 import com.chaparolo.service.controller.IndexController;
 import com.chaparolo.service.controller.LoggedFilter;
+import com.chaparolo.service.controller.ServiceController;
 import com.chaparolo.service.controller.util.FrontHelper;
+import com.chaparolo.service.controller.util.JsonConverter;
 import com.chaparolo.service.model.Product;
 import com.chaparolo.service.service.ProductsService;
 import com.despegar.integration.mongo.connector.MongoCollection;
 import com.despegar.integration.mongo.connector.MongoCollectionFactory;
 import com.despegar.integration.mongo.connector.MongoDBConnection;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -21,6 +24,7 @@ public class Main {
 	Config config = ConfigFactory.load("conf/env/application.conf");
 
 	String appBasePath = config.getString("base-path");
+	String apiBasePath = config.getString("api-base-path");
 
 	// Mongo
 	Config mongoCfg = config.getConfig("mongo");
@@ -37,9 +41,13 @@ public class Main {
 
 	productsService.saveProductsFromXLS("/home/pablo/Downloads/chaparolo.xls");
 	// Controllers
+	ObjectMapper objectMapper = new ObjectMapper();
+	JsonConverter jsonConverter = new JsonConverter(objectMapper);
 	FrontHelper frontHelper = new FrontHelper(appBasePath);
 
+	new ServiceController(apiBasePath, productsService, jsonConverter).register();
 	new LoggedFilter(appBasePath).register();
 	new IndexController(frontHelper, appBasePath).register();
     }
+
 }

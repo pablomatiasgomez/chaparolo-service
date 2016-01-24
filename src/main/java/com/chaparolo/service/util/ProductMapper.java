@@ -17,9 +17,9 @@ import org.apache.poi.ss.usermodel.DateUtil;
 
 import com.chaparolo.service.model.Product;
 
-public class ProductsUtils {
+public class ProductMapper {
 
-    private static final Logger logger = Logger.getLogger(ProductsUtils.class);
+    private static final Logger logger = Logger.getLogger(ProductMapper.class);
 
     public static Stream<Product> getProductsFromXLS(String file) throws FileNotFoundException, IOException {
 	logger.info("Opening XLS to get products");
@@ -28,7 +28,7 @@ public class ProductsUtils {
 	HSSFSheet sheet = wb.getSheetAt(0);
 	int rows = sheet.getPhysicalNumberOfRows();
 
-	return IntStream.range(0, rows).boxed().map(sheet::getRow).filter(ProductsUtils::isProduct).map(row -> {
+	return IntStream.range(0, rows).boxed().map(sheet::getRow).filter(ProductMapper::isProduct).map(row -> {
 	    String brandModel = getCellValue(row.getCell(0));
 	    String brand = brandModel.split(" ")[0];
 	    String model = brandModel.replace(brand, "").trim();

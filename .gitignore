@@ -13,3 +13,4 @@ logs
 nohup.out
 artifact-id
 /target
+log.log
