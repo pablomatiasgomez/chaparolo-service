@@ -3,8 +3,12 @@ package com.chaparolo.service.util;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -15,29 +19,54 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 
+import com.chaparolo.service.model.Brand;
+import com.chaparolo.service.model.Model;
 import com.chaparolo.service.model.Product;
 
 public class ProductMapper {
 
     private static final Logger logger = Logger.getLogger(ProductMapper.class);
 
-    public static Stream<Product> getProductsFromXLS(String file) throws FileNotFoundException, IOException {
+    public static List<Brand> getProductsFromXLS(String file) throws FileNotFoundException, IOException {
 	logger.info("Opening XLS to get products");
 
 	HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(new FileInputStream(file)));
 	HSSFSheet sheet = wb.getSheetAt(0);
 	int rows = sheet.getPhysicalNumberOfRows();
 
-	return IntStream.range(0, rows).boxed().map(sheet::getRow).filter(ProductMapper::isProduct).map(row -> {
+	Map<String, Map<String, List<Product>>> productsByBrands = new HashMap<>();
+
+	IntStream.range(0, rows).boxed().map(sheet::getRow).filter(ProductMapper::isProduct).forEach(row -> {
 	    String brandModel = getCellValue(row.getCell(0));
 	    String brand = brandModel.split(" ")[0];
 	    String model = brandModel.replace(brand, "").trim();
 	    String name = getCellValue(row.getCell(1));
 	    String price = getCellValue(row.getCell(2));
-	    return new Product(brand, model, name, price);
+
+	    if (!productsByBrands.containsKey(brand)) {
+		productsByBrands.put(brand, new HashMap<>());
+	    }
+	    Map<String, List<Product>> modelMap = productsByBrands.get(brand);
+	    if (!modelMap.containsKey(model)) {
+		modelMap.put(model, new ArrayList<>());
+	    }
+	    List<Product> products = modelMap.get(model);
+
+	    products.add(new Product(name, price));
 	});
 
-	// TODO wb.close();
+	wb.close();
+
+	List<Brand> brands = new ArrayList<>();
+	productsByBrands.forEach((brandName, modelNames) -> {
+	    List<Model> models = modelNames.entrySet().stream().map(entry -> {
+		return new Model(entry.getKey(), entry.getValue());
+	    }).collect(Collectors.toList());
+	    brands.add(new Brand(brandName, models));
+	});
+
+	return brands;
+
     }
 
     private static boolean isProduct(HSSFRow row) {

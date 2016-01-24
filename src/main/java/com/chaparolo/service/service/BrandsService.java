@@ -6,31 +6,36 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.chaparolo.service.model.Product;
+import com.chaparolo.service.model.Brand;
 import com.chaparolo.service.util.ProductMapper;
 import com.despegar.integration.mongo.connector.MongoCollection;
 import com.despegar.integration.mongo.query.Query;
 
-public class ProductsService {
+public class BrandsService {
 
-    private static final Logger logger = Logger.getLogger(ProductsService.class);
+    private static final Logger logger = Logger.getLogger(BrandsService.class);
 
-    private MongoCollection<Product> products;
+    private MongoCollection<Brand> brands;
 
-    public ProductsService(MongoCollection<Product> products) {
-	this.products = products;
+    public BrandsService(MongoCollection<Brand> brands) {
+	this.brands = brands;
     }
 
-    private String add(Product product) {
-	return this.products.add(product);
+    private String add(Brand brand) {
+	return this.brands.add(brand);
     }
 
     private void clearCollection() {
-	this.products.remove(new Query());
+	this.brands.remove(new Query());
     }
 
-    public List<Product> getAll() {
-	return this.products.find(new Query().limit(999999999));
+    public List<Brand> getAll() {
+	return this.brands.find(new Query().limit(999999999));
+    }
+
+    public Object get(Query query) {
+	query.limit(99999999);
+	return this.brands.find(query);
     }
 
     public void saveProductsFromXLS(String file) throws FileNotFoundException, IOException {
